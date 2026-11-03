@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>K리그 취향표</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a1f5c;--deep:#06143d;--sky:#a9c8ff;--paper:#f2f5ff;--line:#2a4290}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#fff;font-family:'Noto Sans KR',system-ui,sans-serif;color:var(--deep);padding:12px 12px calc(24px + env(safe-area-inset-bottom,0px));padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700;font-size:14px;color:var(--navy)}
+.plus{width:42px;height:42px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:26px;line-height:1;cursor:pointer}
+#scroll{overflow-x:auto;border-radius:18px;background:#fff;border:1.5px solid #d5def5}
+#sheet{width:max-content;min-width:100%;background:#fff;padding:22px 14px 18px;color:var(--navy)}
+.head{position:sticky;left:0;width:calc(100vw - 52px);text-align:center;margin-bottom:12px}
+h1{font-family:'Black Han Sans','Noto Sans KR',sans-serif;font-weight:400;font-size:36px;letter-spacing:1px;margin:0}
+.sub{color:#5b6fa8;font-size:13px;margin:4px 0 0}
+table{border-collapse:separate;border-spacing:6px}
+th{font-weight:400;vertical-align:bottom;padding:0 0 2px}
+.ch{min-width:72px;text-align:center}
+.club{display:block;font-size:11px;color:#5b6fa8;margin-top:3px;white-space:nowrap}
+.badge{width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;font:700 12px 'Noto Sans KR';color:#fff;border:2px solid #fff;background-size:cover;background-position:center}
+.badge.big{width:42px;height:42px}
+.badge.kl{position:relative;overflow:hidden;background:#fff;border-radius:6px;width:44px;height:44px;color:#0a1f5c;border:1.5px solid #d5def5}
+.badge.sq{position:relative;overflow:hidden;background:#fff;border-radius:6px;font-size:11px;border:1.5px solid #d5def5}
+.badge.sq img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:2px}
+.badge.kl img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}
+.name{position:sticky;left:0;z-index:2;background:#eef2fd;border-radius:10px;min-width:92px;padding:4px;box-shadow:6px 0 6px -2px rgba(10,31,92,.14)}
+.name input{width:100%;background:transparent;border:0;border-bottom:1.5px solid var(--navy);color:var(--navy);font:700 14px 'Noto Sans KR';padding:4px 2px;text-align:center}
+.name input::placeholder{color:#8c9bc8}
+.x{display:block;margin:2px auto 0;background:none;border:0;color:#5b6fa8;font-size:11px;cursor:pointer;padding:2px 6px}
+.cell{width:72px;min-height:70px;background:#f4f7ff;border:1.5px solid #c9d5f2;border-radius:12px;padding:6px 2px;color:var(--navy);font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.cell.has{background:#e6edff;border-color:var(--navy)}
+.cell:focus-visible,.chip:focus-visible,.btn:focus-visible,.plus:focus-visible,.x:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.pick{font-weight:700;font-size:11px;line-height:1.15;word-break:keep-all;text-align:center}
+.pl{font-size:22px;color:#8c9bc8;line-height:1}
+.cap .name{position:static;box-shadow:none}
+.cap .head{position:static;width:auto}
+.cap .x{display:none}
+.foot{display:flex;gap:8px;margin-top:12px}
+.btn{flex:1;padding:13px;border-radius:12px;border:2px solid var(--navy);background:#fff;color:var(--navy);font:700 15px 'Noto Sans KR';cursor:pointer}
+.btn.main{background:var(--navy);color:#fff}
+.layer{position:fixed;inset:0;background:rgba(6,20,61,.6);display:none;align-items:flex-end;justify-content:center;z-index:5}
+.layer.on{display:flex}
+.panel{background:var(--paper);width:100%;max-width:560px;max-height:82vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom,0px))}
+.panel h2{margin:0 0 10px;font-size:17px}
+.pos{font-size:12px;font-weight:700;color:var(--navy);margin:12px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--navy);background:#fff;color:var(--deep);border-radius:999px;padding:7px 12px;font:400 14px 'Noto Sans KR';cursor:pointer}
+.chip.sel{background:var(--navy);color:#fff}
+.chip.none{border-style:dashed}
+.own{display:flex;gap:6px;margin-top:14px}
+.own input{flex:1;border:1.5px solid var(--navy);border-radius:10px;padding:9px;font:400 14px 'Noto Sans KR'}
+.empty{font-size:13px;color:#5b6a9a;margin:6px 0}
+.res{text-align:center}
+.res img{width:100%;border-radius:12px}
+.res p{font-size:13px;margin:8px 0}
+.res a.btn{display:block;margin:8px 0 14px;text-decoration:none}
+@media (prefers-reduced-motion:no-preference){.panel{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.4}}}
+</style>
+</head>
+<body>
+<div class="bar"><span id="cnt"></span><button class="plus" id="add" aria-label="프로필 추가">+</button></div>
+<div id="scroll">
+  <div id="sheet">
+    <div class="head"><h1>K리그 취향표</h1><p class="sub">♥당신의취향을뽑아보세요..♥</p></div>
+    <table id="tbl"></table>
+  </div>
+</div>
+<div class="foot">
+  <button class="btn" id="reset">전체 초기화</button>
+  <button class="btn main" id="save">이미지로 저장</button>
+</div>
+
+<div class="layer" id="pickL"><div class="panel" role="dialog" aria-modal="true" id="pickP"></div></div>
+<div class="layer" id="resL"><div class="panel res" id="resP"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+// ── 데이터: 여기만 고치면 됩니다 ─────────────────────────────
+// 2026 K리그1 12개 구단. 표에는 약칭(s) 가나다순으로 배치돼요.
+const CLUBS=[
+ {id:'seoul',name:'FC서울',s:'서울',c:'#c8102e'},
+ {id:'ulsan',name:'울산 HD',s:'울산',c:'#1d5fa6'},
+ {id:'jeonbuk',name:'전북 현대',s:'전북',c:'#1a7f37'},
+ {id:'gangwon',name:'강원FC',s:'강원',c:'#e8590c'},
+ {id:'pohang',name:'포항 스틸러스',s:'포항',c:'#222222'},
+ {id:'jeju',name:'제주 SK',s:'제주',c:'#e8730c'},
+ {id:'daejeon',name:'대전 하나',s:'대전',c:'#8b1e3f'},
+ {id:'gwangju',name:'광주FC',s:'광주',c:'#b8960b'},
+ {id:'gimcheon',name:'김천 상무',s:'김천',c:'#c0272d'},
+ {id:'bucheon',name:'부천FC 1995',s:'부천',c:'#a31621'},
+ {id:'incheon',name:'인천 유나이티드',s:'인천',c:'#1c4ba0'},
+ {id:'anyang',name:'FC안양',s:'안양',c:'#5b2a86'}
+].sort((a,b)=>a.s.localeCompare(b.s,'ko'));
+// 선수 명단: 구단id → 포지션 → 이름(쉼표 구분). 사진은 PHOTO['이름']='이미지주소'로 추가.
+const R={
+ seoul:{GK:'임준섭,구성윤,백종범,강현무,윤기욱',
+  DF:'이상민,야잔 알아랍,최준,안재민,이한도,김진수,김지원,로스,박성훈,이서현,박수일,신지섭,김강준',
+  MF:'흐르보예 바베츠,정승원,이승모,정하원,고필관,김민준,황도윤,손정범,박장한결',
+  FW:'클리말라,안데르손,후이즈,정현우,조영욱,천성훈,문선민,정현웅,바또'},
+ gangwon:{GK:'박청효,김정훈,홍진혁,김유성,조민규',
+  DF:'정승빈,카림,이기혁,강투지,박호영,이효빈,김도현,최재혁,홍철,권석주,이정현,김어진,신민하,강성윤,강준혁',
+  MF:'서민우,김동현,이승원,강윤구,김태환,여준엽,고은석,원희도,김태혁,이용재,김슬기,황은총,김이석,황문기,이유현',
+  FW:'김대원,김건희,모재현,고영준,진준서,이은호,박상혁,유병헌,조원우,이지호,제시,최지남,아부달라,최병찬'},
+ gimcheon:{GK:'박만호,안준수,안찬기,박상영',
+  DF:'민경현,김현우,김민규,박진성,홍시후,김서진,박민서,변준수,김진호,송준석,강영훈,이상혁,임준영',
+  MF:'임덕근,정마호,노경호,윤재석,박태준,이강현,오재혁,최규현,김준하,홍원진',
+  FW:'김인균,이상헌,홍윤상,강민규,강주혁,정재민,박용희,변경준,허율,박지원'},
+ ulsan:{GK:'최주호,류성민,조현우,문정인,황병근,문현호',
+  DF:'윤종규,정성빈,서명관,정승현,강상우,김영권,조현택,이재익,토마스,트로야크,심상민,최석현',
+  MF:'보야니치,이희균,이동경,이진현,박우진,이규성,페드링요,장시영,박용우,조민서,백인우',
+  FW:'말컹,에릭,정재상,벤지,야고'},
+ pohang:{GK:'윤평국,황인재,홍성민,권능',
+  DF:'김예성,전민광,진시우,강민준,이창우,신광훈,박찬용,조영준,조성욱,김호진,윤대근,완델손',
+  MF:'김승호,황재환,김동진,니시야 켄토,김범준,기성용,이수아,황서웅',
+  FW:'원기종,안재준,트란지스카,주닝요,조상혁,김광원,조르지,김용학,백승원,정한민'},
+ gwangju:{GK:'김경민,김동화,이윤성',
+  DF:'장석환,이민기,반 흐룬스벤,안영규,주앙 페드로,임승겸,김용혁,공배현,박원재,민상기,배진우',
+  MF:'주세종,최경록,유제호,정지훈,김종석,권성윤,박성현,리영직,강희수,김우진,오하종,정규민,문민서,홍용준',
+  FW:'사이토스키,하승운,프리드욘슨,아이데일,안혁주,김윤호,신창무,바 루아'},
+ daejeon:{GK:'이창근,이준서,김민수,이경태',
+  DF:'박규현,김민덕,조성권,임종은,강윤성,김진야,이명재,오재석,서영재,이정택,김문환,임유석,하창래,안톤',
+  MF:'밥신,엄원상,김준범,루빅손,이현식,김봉수,박병찬,이순민,김현욱',
+  FW:'마사,디오고,주민규,서진수,정재희,김지호,문건호,구훈민,주앙 빅토르,유강현'},
+ bucheon:{GK:'김형근,김현엽,이상현',
+  DF:'김종민,패트릭,티아깅요,김규민,홍성욱,안태현,백동규,이예찬,유승현,신재원,조성준,이재원',
+  MF:'성예건,정호진,윤빛가람,김민준,김종우,김상준,성신,카즈,김동현,여봉훈,김승빈,강재우',
+  FW:'박정인,바사니,갈레고,이의형,한지호,어담,가브리엘,구스타보'},
+ anyang:{GK:'정민재,김정훈,김다솔,김성동',
+  DF:'김지훈,이창용,김영찬,강지훈,권경원,김동진,김재현,이태희,대니 바커,박종현,주현우',
+  MF:'강지완,마테우스,김정현,한가람,문성우,크네제비치,김보경,이진용,장정우',
+  FW:'엘쿠라노,유키치,아일톤,박정훈,김운,유정완,최건주,블레이즈,김강,오형준,채현우'},
+ incheon:{GK:'김동헌,이태희,왕민준',
+  DF:'후안 이비자,이상기,김건희,최승구,박경섭,고정민,이준섭,여승원,김연수,이주용,김명순',
+  MF:'이명주,문지환,오후성,이케르,제르소,백민규,서재민,김성민,정치인,이민혁,김영환,오준엽,레안드로,이청용,정원진',
+  FW:'무고사,이동률,박승호,페리어'},
+ jeonbuk:{GK:'이주현,공시현,송범근,이한결,전지완,정대영',
+  DF:'김영빈,연제운,조위제,박지수,김하준,김준영,김태환,이상명,황승준,한재빈,서정혁,김주형,최진웅,김태영,최우진,김수형,김태현,곽희벽',
+  MF:'맹성웅,강상윤,감보아,이수빈,문준혁,이영재,도도,장남웅,우현수,이건희,구교빈,한승민,박현민,윤현석,김진규',
+  FW:'이동준,티아고,이승우,김승섭,전병관,박주영,츄마시,한석진,엄승민,안태훈,김창훈,기티스,정상운,김두현,이탈로,콤파뇨,임준휘,모따'},
+ jeju:{GK:'김동준,주승민,허자웅',
+  DF:'토비아스,세레스틴,허강준,권기민,정운,유인수,임창우,김륜성,김재우,박민재,김태환,조인정',
+  MF:'이탈로,이창민,박수빈,김재민,강동휘',
+  FW:'박창준,아이아스,이건희,신상은,김신진,치나리,최병욱,구본서,네게바'}
+};
+const PHOTO={};
+// ─────────────────────────────────────────────────────────────
+const EMPTY='__empty';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={rows:[{name:'',picks:{}}]};
+try{const d=JSON.parse(localStorage.getItem('kprofiles2')||'null'); if(d&&d.rows&&d.rows.length) S=d}catch(e){}
+const save=()=>{try{localStorage.setItem('kprofiles2',JSON.stringify(S))}catch(e){}};
+// K리그 로고: 같은 폴더에 kleague.png 파일을 올리면 자동으로 표시돼요. 없으면 남색 'K' 원으로 보여요.
+const KLOGO='kleague.png';
+const klogo=()=>`<span class="badge kl"><img src="${KLOGO}" alt="K리그" onerror="this.remove()">K</span>`;
+// 구단 엠블럼: emblems 폴더에 구단id.png (예: emblems/seoul.png)를 올리면 자동으로 표시돼요. 없으면 흰 배경에 구단 약칭이 보여요.
+const badge=(c,big,photo)=>photo
+  ?`<span class="badge sq${big?' big':''}" style="background-image:url('${esc(photo)}');background-size:cover"></span>`
+  :`<span class="badge sq${big?' big':''}" style="color:${c.c}"><img src="emblems/${c.id}.png" alt="" onerror="this.remove()">${c.s}</span>`;
+
+function render(){
+  $('cnt').textContent=S.rows.length>1?`프로필 ${S.rows.length}명`:'혼자 만들기';
+  let h='<tr><th class="name" style="background:none;box-shadow:none"></th>'+CLUBS.map(c=>`<th class="ch">${badge(c,true)}<span class="club">${c.name}</span></th>`).join('')+'</tr>';
+  S.rows.forEach((row,r)=>{
+    h+=`<tr><td class="name"><input data-r="${r}" maxlength="10" value="${esc(row.name)}" placeholder="${r?'이름':'내 이름'}" aria-label="프로필 이름">${r?`<button class="x" data-del="${r}" aria-label="프로필 삭제">삭제</button>`:''}</td>`;
+    h+=CLUBS.map(c=>{
+      const p=row.picks[c.id]; let b;
+      if(p===EMPTY) b=`${klogo()}<span class="pick">텅</span>`;
+      else if(p) b=`${badge(c,false,PHOTO[p])}<span class="pick">${esc(p)}</span>`;
+      else b='<span class="pl">+</span>';
+      return `<td><button class="cell${p?' has':''}" data-r="${r}" data-id="${c.id}" aria-label="${c.name} 선수 고르기">${b}</button></td>`;
+    }).join('')+'</tr>';
+  });
+  $('tbl').innerHTML=h;
+}
+
+function openPick(r,id){
+  const c=CLUBS.find(x=>x.id===id), ro=R[id], cur=S.rows[r].picks[id];
+  let h=`<h2>${esc(S.rows[r].name||'내')} · ${c.name}</h2>`;
+  if(ro) for(const pos in ro) h+=`<div class="pos">${pos}</div><div class="chips">${ro[pos].split(',').map(n=>`<button class="chip${cur===n?' sel':''}" data-n="${esc(n)}">${esc(n)}</button>`).join('')}</div>`;
+  else h+='<p class="empty">선수 명단 준비 중이에요. 아래에 직접 입력할 수 있어요.</p>';
+  h+=`<div class="pos">선수 없이</div><div class="chips"><button class="chip none${cur===EMPTY?' sel':''}" data-n="${EMPTY}">K리그 로고 고르기 (텅)</button>${cur?'<button class="chip none" data-n="">선택 취소</button>':''}</div>`;
+  h+='<div class="own"><input id="own" maxlength="12" placeholder="직접 입력"><button class="btn main" id="ownOk" style="flex:0 0 auto;padding:9px 16px">확인</button></div>';
+  $('pickP').innerHTML=h; $('pickP').dataset.r=r; $('pickP').dataset.id=id; $('pickL').classList.add('on');
+}
+const closeAll=()=>document.querySelectorAll('.layer').forEach(l=>l.classList.remove('on'));
+function setPick(v){
+  const {r,id}=$('pickP').dataset, pk=S.rows[+r].picks;
+  if(v) pk[id]=v; else delete pk[id];
+  save(); render(); closeAll();
+}
+
+$('tbl').addEventListener('click',e=>{
+  const b=e.target.closest('.cell'); if(b) return openPick(+b.dataset.r,b.dataset.id);
+  const d=e.target.closest('.x');
+  if(d){const r=+d.dataset.del; if(confirm((S.rows[r].name||'이 프로필')+'을(를) 삭제할까요?')){S.rows.splice(r,1);save();render()}}
+});
+$('tbl').addEventListener('input',e=>{if(e.target.dataset.r!==undefined){S.rows[+e.target.dataset.r].name=e.target.value;save()}});
+$('add').onclick=()=>{S.rows.push({name:'',picks:{}});save();render();
+  const i=document.querySelector(`input[data-r="${S.rows.length-1}"]`); if(i){i.scrollIntoView({block:'nearest',inline:'start'});i.focus()}};
+$('pickP').addEventListener('click',e=>{
+  const ch=e.target.closest('.chip'); if(ch) return setPick(ch.dataset.n);
+  if(e.target.id==='ownOk'){const v=$('own').value.trim(); if(v) setPick(v)}
+});
+$('pickL').addEventListener('click',e=>{if(e.target===$('pickL')) closeAll()});
+$('resL').addEventListener('click',e=>{if(e.target===$('resL')) closeAll()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeAll()});
+
+$('reset').onclick=()=>{ if(confirm('모든 프로필의 선택을 지울까요?')){S.rows.forEach(r=>r.picks={});save();render()} };
+$('save').onclick=async()=>{
+  const b=$('save'); b.disabled=true; b.textContent='만드는 중…'; $('sheet').classList.add('cap');
+  try{
+    const cv=await html2canvas($('sheet'),{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    const url=cv.toDataURL('image/png');
+    $('resP').innerHTML=`<img src="${url}" alt="완성된 K리그 취향표"><p>이미지를 길게 눌러 저장하거나 아래 버튼을 눌러요.</p><a class="btn main" href="${url}" download="K리그_취향표.png">다운로드</a><button class="btn" id="resX" style="width:100%">닫기</button>`;
+    $('resL').classList.add('on'); $('resX').onclick=closeAll;
+  }catch(e){alert('이미지를 만들지 못했어요. 다시 눌러 주세요.')}
+  $('sheet').classList.remove('cap'); b.disabled=false; b.textContent='이미지로 저장';
+};
+render();
+</script>
+</body>
+</html>
